@@ -1,0 +1,8 @@
+treat-group-admins-as-plugin-admins: true
+
+default-name-card: "[请绑定玩家ID]"
+
+plugin-admins: []
+
+groups: []
+
