@@ -57,7 +57,7 @@ object Config {
             "literal" -> Validator.Literal
             "prefix" -> Validator.Prefix
             else -> {
-                InvalidConfigException("Invalid validator type: ${file.getString("validator")}").printStackTrace()
+                InvalidConfigException.print("Invalid validator type: ${file.getString("validator")}")
                 Main.logger.warning("Validator type has automatically been set to literal")
                 Validator.Literal
             }

@@ -21,8 +21,13 @@ object LockManager {
         val result = LockSet()
         section.forEach { group, path ->
             section.getConfigurationSection(path)?.forEach { member, name ->
-                runCatching { result.add(LockEntry(group.toLong(), member.toLong(), name)) }
-                    .onFailure { InvalidConfigException("Invalid lock: $group - $path - $name", it).printStackTrace() }
+                val entry = LockEntry.builder(::InvalidConfigException)
+                    .withGroup(group)
+                    .withMember(member)
+                    .withName(name)
+                    .build()
+
+                entry?.let { result.add(it) }
             }
         }
 
