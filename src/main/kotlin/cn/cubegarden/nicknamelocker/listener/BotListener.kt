@@ -77,7 +77,7 @@ class BotListener : Listener {
             ?: botApi.getPlayer(member.id)?.let { Bukkit.getOfflinePlayer(it).name }
             ?: Config.defaultNameCard
 
-        val needRepair = Config.validator.validate(member.nameCard, nameCard)
+        val needRepair = !Config.validator.validate(member.nameCard, nameCard)
         if (needRepair) member.nameCard = Config.validator.repair(member.nameCard, nameCard)
 
         return needRepair
