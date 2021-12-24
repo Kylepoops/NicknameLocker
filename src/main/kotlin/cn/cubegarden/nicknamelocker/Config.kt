@@ -48,11 +48,11 @@ object Config {
 
         defaultNameCard = file.getString("default-name-card", "[请绑定玩家ID]")!!
 
-        admins = (file.getLongListException("plugin-admins") + botOwners).toSet()
+        admins = file.getLongListException("plugin-admins").union(botOwners)
 
         originalGroups = file.getLongListException("groups").toSet()
 
-        groups = (originalGroups + botGroups).toMutableSet()
+        groups = originalGroups.union(botGroups).toMutableSet()
 
         locks = file.getConfigurationSection("locks")?.let { LockManager.read(it) } ?: LockSet()
     }
@@ -64,5 +64,5 @@ object Config {
     }
 
     private fun groupDiffs() =
-        groups.filter { it !in originalGroups && it !in botGroups }.union(originalGroups).toSet()
+        groups.filter { it !in originalGroups && it !in botGroups }.union(originalGroups)
 }
