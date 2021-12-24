@@ -2,7 +2,7 @@ treat-group-admins-as-plugin-admins: true
 
 default-name-card: "[请绑定玩家ID]"
 
-# literal: 名片必须完全一至
+# literal: 名片必须完全一致
 # prefix: 名片仅需以此开头
 validator: literal
 
