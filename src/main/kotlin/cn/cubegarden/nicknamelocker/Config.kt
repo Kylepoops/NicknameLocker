@@ -1,7 +1,9 @@
 package cn.cubegarden.nicknamelocker
 
 import cn.cubegarden.nicknamelocker.data.LockSet
+import cn.cubegarden.nicknamelocker.exception.InvalidConfigException
 import cn.cubegarden.nicknamelocker.util.getLongListException
+import cn.cubegarden.nicknamelocker.validator.Validator
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import kotlin.properties.Delegates
@@ -15,6 +17,9 @@ object Config {
         private set
 
     lateinit var defaultNameCard: String
+        private set
+
+    lateinit var validator: Validator
         private set
 
     lateinit var admins: Set<Long>
@@ -47,6 +52,16 @@ object Config {
         treatGroupAdminsAsPluginAdmins = file.getBoolean("treat-group-admins-as-plugin-admins")
 
         defaultNameCard = file.getString("default-name-card", "[请绑定玩家ID]")!!
+
+        validator = when (file.getString("validator", "literal")?.lowercase()) {
+            "literal" -> Validator.Literal
+            "prefix" -> Validator.Prefix
+            else -> {
+                InvalidConfigException("Invalid validator type: ${file.getString("validator")}").printStackTrace()
+                Main.logger.warning("Validator type has automatically been set to literal")
+                Validator.Literal
+            }
+        }
 
         admins = file.getLongListException("plugin-admins").union(botOwners)
 

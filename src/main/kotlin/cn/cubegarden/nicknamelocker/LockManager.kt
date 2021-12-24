@@ -22,7 +22,7 @@ object LockManager {
         section.forEach { group, path ->
             section.getConfigurationSection(path)?.forEach { member, name ->
                 runCatching { result.add(LockEntry(group.toLong(), member.toLong(), name)) }
-                    .onFailure { throw InvalidConfigException("Invalid lock: $group - $path - $name", it) }
+                    .onFailure { InvalidConfigException("Invalid lock: $group - $path - $name", it).printStackTrace() }
             }
         }
 

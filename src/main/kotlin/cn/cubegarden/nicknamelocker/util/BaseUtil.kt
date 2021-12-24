@@ -14,7 +14,7 @@ fun FileConfiguration.getLongListException(path: String): MutableList<Long> {
     val list = mutableListOf<Long>()
     this.getStringList(path).forEach { element ->
         runCatching { list.add(element.toLong()) }
-            .onFailure { throw InvalidConfigException("$path: $element is not a long value", it) }
+            .onFailure { InvalidConfigException("$path: $element is not a long value", it).printStackTrace() }
     }
     return list
 }
