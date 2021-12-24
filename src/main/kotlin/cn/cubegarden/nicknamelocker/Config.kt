@@ -17,14 +17,27 @@ object Config {
     lateinit var defaultNameCard: String
         private set
 
-    lateinit var admins: List<Long>
+    lateinit var admins: Set<Long>
         private set
 
-    lateinit var groups: MutableList<Long>
+    private lateinit var originalGroups: Set<Long>
+
+    lateinit var groups: MutableSet<Long>
         private set
 
     lateinit var locks: LockSet
         private set
+
+    private val botOwners by lazy {
+        Bukkit.getPluginManager().getPlugin("AmazingBot")!!.config.getLongList("owners").toSet()
+    }
+
+    private val botGroups by lazy {
+        Bukkit.getPluginManager().getPlugin("AmazingBot")!!.config.getConfigurationSection("groups")!!
+            .getKeys(false)
+            .mapNotNull { runCatching { it.toLong() }.getOrNull() }
+            .toSet()
+    }
 
     fun load() {
         if (::file.isInitialized) Main.plugin.reloadConfig()
@@ -35,24 +48,21 @@ object Config {
 
         defaultNameCard = file.getString("default-name-card", "[请绑定玩家ID]")!!
 
-        admins = file.getLongListException("plugin-admins") + injectBotOwners()
+        admins = (file.getLongListException("plugin-admins") + botOwners).toSet()
 
-        groups = (file.getLongListException("groups") + injectBotGroups()).toMutableList()
+        originalGroups = file.getLongListException("groups").toSet()
+
+        groups = (originalGroups + botGroups).toMutableSet()
 
         locks = file.getConfigurationSection("locks")?.let { LockManager.read(it) } ?: LockSet()
     }
 
-    private fun injectBotOwners() =
-        Bukkit.getPluginManager().getPlugin("AmazingBot")!!.config.getLongList("owners")
-
-    private fun injectBotGroups() =
-        Bukkit.getPluginManager().getPlugin("AmazingBot")!!.config.getConfigurationSection("groups")!!
-            .getKeys(false)
-            .mapNotNull { runCatching { it.toLong() }.getOrNull() }
-
     fun save() {
-        file.set("groups", groups)
+        file.set("groups", groupDiffs())
         LockManager.save(file, "locks", locks)
         Main.plugin.saveConfig()
     }
+
+    private fun groupDiffs() =
+        groups.filter { it !in originalGroups && it !in botGroups }.union(originalGroups).toSet()
 }
