@@ -2,6 +2,7 @@ package cn.cubegarden.nicknamelocker
 
 import cn.cubegarden.nicknamelocker.listener.BotListener
 import cn.cubegarden.nicknamelocker.listener.SaveListener
+import cn.cubegarden.nicknamelocker.util.submit
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
@@ -16,9 +17,13 @@ class Main : JavaPlugin() {
         }
         this.saveDefaultConfig()
         Config.load()
-        this.server.pluginManager.apply {
-            registerEvents(BotListener(), plugin)
-            registerEvents(SaveListener(), plugin)
+
+        submit {
+            this.server.pluginManager.apply {
+                registerEvents(BotListener(), plugin)
+                registerEvents(SaveListener(), plugin)
+            }
+            logger.info("NicknameLocker enabled!")
         }
     }
 

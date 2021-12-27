@@ -29,3 +29,7 @@ inline fun <T> Result<T>.wrapAndPrint(
         Main.logger.log(Level.WARNING, message, wrapper(message, it))
     }
 }
+
+inline fun submit(crossinline block: () -> Unit) {
+    Main.plugin.server.scheduler.runTask(Main.plugin, Runnable { block() })
+}

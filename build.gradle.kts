@@ -44,7 +44,7 @@ configure<JavaPluginExtension> {
 }
 
 bukkit {
-    load = BukkitPluginDescription.PluginLoadOrder.STARTUP
+    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     main = "cn.cubegarden.nicknamelocker.Main"
     apiVersion = "1.17"
     author = "Kylepoops"
