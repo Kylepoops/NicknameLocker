@@ -1,7 +1,6 @@
 package cn.cubegarden.nicknamelocker
 
 import cn.cubegarden.nicknamelocker.data.LockSet
-import cn.cubegarden.nicknamelocker.exception.InvalidConfigException
 import cn.cubegarden.nicknamelocker.util.getLongListException
 import cn.cubegarden.nicknamelocker.validator.Validator
 import org.bukkit.Bukkit
@@ -57,7 +56,7 @@ object Config {
             "literal" -> Validator.Literal
             "prefix" -> Validator.Prefix
             else -> {
-                InvalidConfigException.print("Invalid validator type: ${file.getString("validator")}")
+                Main.logger.warning("Invalid validator type: ${file.getString("validator")}")
                 Main.logger.warning("Validator type has automatically been set to literal")
                 Validator.Literal
             }

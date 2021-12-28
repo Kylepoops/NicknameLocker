@@ -2,7 +2,6 @@ package cn.cubegarden.nicknamelocker
 
 import cn.cubegarden.nicknamelocker.data.LockEntry
 import cn.cubegarden.nicknamelocker.data.LockSet
-import cn.cubegarden.nicknamelocker.exception.InvalidConfigException
 import cn.cubegarden.nicknamelocker.util.forEach
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
@@ -21,13 +20,12 @@ object LockManager {
         val result = LockSet()
         section.forEach { group, path ->
             section.getConfigurationSection(path)?.forEach { member, name ->
-                val entry = LockEntry.builder(::InvalidConfigException)
+                LockEntry.builder()
                     .withGroup(group)
                     .withMember(member)
                     .withName(name)
                     .build()
-
-                entry?.let { result.add(it) }
+                    ?.let { result.add(it) }
             }
         }
 
